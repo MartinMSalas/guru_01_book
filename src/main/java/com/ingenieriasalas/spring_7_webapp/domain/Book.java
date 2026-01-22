@@ -2,6 +2,7 @@ package com.ingenieriasalas.spring_7_webapp.domain;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -18,7 +19,7 @@ public class Book {
     @JoinTable(name = "author_book", joinColumns = @JoinColumn(name="book_id"),
             inverseJoinColumns = @JoinColumn(name="author_id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"book_id", "author_id"}))
-    private Set<Author> authors;
+    private Set<Author> authors = new HashSet<>();
 
 
     public Set<Author> getAuthors() {
