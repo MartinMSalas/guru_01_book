@@ -17,7 +17,10 @@ on:
     branches:
       - master
       - develop
-
+      
+permissions:
+  contents: write
+  
 jobs:
   build:
 
