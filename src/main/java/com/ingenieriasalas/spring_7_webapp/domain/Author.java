@@ -11,8 +11,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-
-
+@Slf4j
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class Author {
