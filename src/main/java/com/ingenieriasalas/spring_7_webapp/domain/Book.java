@@ -1,12 +1,19 @@
 package com.ingenieriasalas.spring_7_webapp.domain;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@Data
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Book {
 
     @Id
@@ -21,46 +28,34 @@ public class Book {
             uniqueConstraints = @UniqueConstraint(columnNames = {"book_id", "author_id"}))
     private Set<Author> authors = new HashSet<>();
 
+    @ManyToOne
+    Publisher publisher;
 
-    public Set<Author> getAuthors() {
-        return authors;
-    }
 
-    public void setAuthors(Set<Author> authors) {
-        this.authors = authors;
-    }
+    /* ===== AUDITING ===== */
 
-    public Long getId() {
-        return id;
-    }
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private Instant createdDate;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @LastModifiedDate
+    @Column(nullable = false)
+    private Instant lastModifiedDate;
 
-    public String getTitle() {
-        return title;
-    }
+    /* ===== OPTIMISTIC LOCKING ===== */
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getIsbn() {
-        return isbn;
-    }
-
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
-    }
+    @Version
+    private Long version;
 
     @Override
     public String toString() {
         return "Book{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
+                "createdDate=" + createdDate +
+                ", id=" + id +
                 ", isbn='" + isbn + '\'' +
-                ", authors=" + authors +
+                ", lastModifiedDate=" + lastModifiedDate +
+                ", title='" + title + '\'' +
+                ", version=" + version +
                 '}';
     }
 }

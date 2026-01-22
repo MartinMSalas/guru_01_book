@@ -1,12 +1,20 @@
 package com.ingenieriasalas.spring_7_webapp.domain;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+
+
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Author {
 
     @Id
@@ -72,4 +80,19 @@ public class Author {
                 ", books=" + books +
                 '}';
     }
+
+    /* ===== AUDITING ===== */
+
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private Instant createdDate;
+
+    @LastModifiedDate
+    @Column(nullable = false)
+    private Instant lastModifiedDate;
+
+    /* ===== OPTIMISTIC LOCKING ===== */
+
+    @Version
+    private Long version;
 }
