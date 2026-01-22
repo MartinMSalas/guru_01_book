@@ -1,10 +1,12 @@
 package com.ingenieriasalas.spring_7_webapp.domain;
 
 import jakarta.persistence.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
 import java.util.Set;
 
+@Slf4j
 @Entity
 public class Author {
 
