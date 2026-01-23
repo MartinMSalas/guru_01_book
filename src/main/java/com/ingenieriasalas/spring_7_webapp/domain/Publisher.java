@@ -12,7 +12,7 @@ import java.util.Set;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class Author {
+public class Publisher {
 
     /* =========================
        IDENTIFIER
@@ -24,13 +24,16 @@ public class Author {
     /* =========================
        BASIC FIELDS
        ========================= */
-    private String firstName;
-    private String lastName;
+    private String publisherName;
+    private String address;
+    private String city;
+    private String state;
+    private String zipCode;
 
     /* =========================
        RELATIONSHIPS
        ========================= */
-    @ManyToMany(mappedBy = "authors")
+    @OneToMany(mappedBy = "publisher")
     private Set<Book> books = new HashSet<>();
 
     /* =========================
@@ -55,19 +58,26 @@ public class Author {
        ========================= */
 
     /**
-     * Public convenience method.
-     * Delegates to owning side (Book).
+     * Public method to attach a book to this publisher.
+     * Delegates to owning side (Book.publisher).
      */
     public void addBook(Book book) {
-        book.addAuthor(this);
-    }
-
-    public void removeBook(Book book) {
-        book.removeAuthor(this);
+        if (book == null) return;
+        book.setPublisher(this); // owning side updates and calls internalAddBook
     }
 
     /**
-     * INTERNAL — used only by Book (owning side)
+     * Public method to detach a book from this publisher.
+     */
+    public void removeBook(Book book) {
+        if (book == null) return;
+        if (this.equals(book.getPublisher())) {
+            book.setPublisher(null);
+        }
+    }
+
+    /**
+     * INTERNAL — called only from Book.setPublisher(...)
      */
     void internalAddBook(Book book) {
         books.add(book);
@@ -77,35 +87,60 @@ public class Author {
         books.remove(book);
     }
 
-    /**
-     * Read-only access to books
-     */
+    /* =========================
+       READ-ONLY ACCESSORS
+       ========================= */
+
     public Set<Book> getBooks() {
-        //return Collections.unmodifiableSet(books);
-        return Set.copyOf(books);
+        return Collections.unmodifiableSet(books);
     }
 
     /* =========================
        GETTERS / SETTERS
        ========================= */
+
     public Long getId() {
         return id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getPublisherName() {
+        return publisherName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setPublisherName(String publisherName) {
+        this.publisherName = publisherName;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getAddress() {
+        return address;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
     }
 
     public Instant getCreatedDate() {
@@ -123,10 +158,11 @@ public class Author {
     /* =========================
        EQUALITY (JPA-SAFE)
        ========================= */
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Author other)) return false;
+        if (!(o instanceof Publisher other)) return false;
         return id != null && id.equals(other.id);
     }
 
@@ -138,12 +174,13 @@ public class Author {
     /* =========================
        DEBUG OUTPUT
        ========================= */
+
     @Override
     public String toString() {
-        return "Author{" +
+        return "Publisher{" +
                 "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                ", publisherName='" + publisherName + '\'' +
+                ", state='" + state + '\'' +
                 '}';
     }
 }
