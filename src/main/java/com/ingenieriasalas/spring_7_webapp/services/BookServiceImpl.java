@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
  * Author: m
  * Date: 22/1/26
  * Project Name: guru-01-book
- * Description: Martin for Ingenieria Salas
+ * Description: beExcellent
  */
 @Service
 public class BookServiceImpl implements BookService {

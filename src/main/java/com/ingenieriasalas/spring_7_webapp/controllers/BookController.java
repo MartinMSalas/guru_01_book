@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Author: m
  * Date: 22/1/26
  * Project Name: guru-01-book
- * Description: Martin for Ingenieria Salas
+ * Description: beExcellent
  */
 @RestController
 public class BookController {
@@ -21,10 +21,10 @@ public class BookController {
     }
 
     @RequestMapping("/books")
-    public String getBooks(Model model){
+    public Model getBooks(Model model) {
 
         model.addAttribute("books", bookService.findAll());
 
-        return "books";
+        return model;
     }
 }

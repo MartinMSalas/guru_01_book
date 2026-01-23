@@ -2,6 +2,7 @@ package com.ingenieriasalas.spring_7_webapp.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -25,6 +26,14 @@ public class Author {
 
     @ManyToMany(mappedBy = "authors")
     private Set<Book> books = new HashSet<>();
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private Instant createdDate;
+    @LastModifiedDate
+    @Column(nullable = false)
+    private Instant lastModifiedDate;
+    @Version
+    private Long version;
 
     public Set<Book> getBooks() {
         return books;
@@ -58,6 +67,8 @@ public class Author {
         this.lastName = lastName;
     }
 
+    /* ===== AUDITING ===== */
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -70,6 +81,8 @@ public class Author {
         return Objects.hashCode(id);
     }
 
+    /* ===== OPTIMISTIC LOCKING ===== */
+
     @Override
     public String toString() {
         return "Author  {" +
@@ -79,19 +92,4 @@ public class Author {
                 ", books=" + books +
                 '}';
     }
-
-    /* ===== AUDITING ===== */
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private Instant createdDate;
-
-    @LastModifiedDate
-    @Column(nullable = false)
-    private Instant lastModifiedDate;
-
-    /* ===== OPTIMISTIC LOCKING ===== */
-
-    @Version
-    private Long version;
 }

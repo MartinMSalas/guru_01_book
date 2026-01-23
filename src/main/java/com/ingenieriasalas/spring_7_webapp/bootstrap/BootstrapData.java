@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * Author: m
  * Date: 22/1/26
  * Project Name: guru-01-book
- * Description: Martin for Ingenieria Salas
+ * Description: beExcellent
  */
 @Component
 public class BootstrapData implements CommandLineRunner {
@@ -30,43 +30,53 @@ public class BootstrapData implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Author eric = new Author();
-        eric.setFirstName("Eric");
-        eric.setLastName("Pocholo");
-
-        Author marcus = new Author();
-        marcus.setFirstName("Marcus");
-        marcus.setLastName("Aurelius");
-
-        Book turnerDiaries = new Book();
-        turnerDiaries.setTitle("The Turner Diaries");
-        turnerDiaries.setIsbn("9780692943656");
-
-        Book meditations = new Book();
-        meditations.setTitle("Marcus Aurelius meditations");
-        meditations.setIsbn("1441221124412");
 
         Publisher pub = new Publisher();
         pub.setPublisherName("Pub pub publishing");
         pub.setState("Catamarca");
+        Publisher pubSaved = publisherRepository.save(pub);
+
+        Book turnerDiaries = new Book();
+        turnerDiaries.setTitle("The Turner Diaries");
+        turnerDiaries.setIsbn("9780692943656");
+        turnerDiaries.setPublisher(pub);
+
+        Book meditations = new Book();
+        meditations.setTitle("Marcus Aurelius meditations");
+        meditations.setIsbn("1441221124412");
+        meditations.setPublisher(pub);
+
+
+        Book beExcellent = new Book();
+        beExcellent.setTitle("Be excellent");
+        beExcellent.setIsbn("1234567890");
+        beExcellent.setPublisher(pub);
+
+        Book turnerSaved = bookRepository.save(turnerDiaries);
+        Book meditationsSaved = bookRepository.save(meditations);
+        Book beExcellentSaved = bookRepository.save(beExcellent);
+
+        Author eric = new Author();
+        eric.setFirstName("Eric");
+        eric.setLastName("Pocholo");
+        eric.getBooks().add(turnerSaved);
+
+        Author marcus = new Author();
+        marcus.setFirstName("Marcus");
+        marcus.setLastName("Aurelius");
+        marcus.getBooks().add(meditationsSaved);
+        marcus.getBooks().add(beExcellentSaved);
+
 
         Author ericSaved = authorRepository.save(eric);
         Author marcusSaved = authorRepository.save(marcus);
 
-        Book turnerSaved = bookRepository.save(turnerDiaries);
-        Book meditationsSaved = bookRepository.save(meditations);
-
-        Publisher pubSaved = publisherRepository.save(pub);
-
-        ericSaved.getBooks().add(turnerSaved);
-        marcusSaved.getBooks().add(meditationsSaved);
-
-        turnerSaved.setPublisher(pub);
-        meditationsSaved.setPublisher(pub);
-
-        turnerSaved = bookRepository.save(turnerDiaries);
-        meditationsSaved = bookRepository.save(meditations);
-
+        turnerSaved.getAuthors().add(eric);
+        meditationsSaved.getAuthors().add(marcus);
+        beExcellentSaved.getAuthors().add(marcus);
+        turnerSaved = bookRepository.save(turnerSaved);
+        meditationsSaved = bookRepository.save(meditationsSaved);
+        beExcellentSaved = bookRepository.save(beExcellentSaved);
         System.out.println("In Bootstrap");
         System.out.println("Author Count: " + authorRepository.count());
         System.out.println("Book Count: " + bookRepository.count());
