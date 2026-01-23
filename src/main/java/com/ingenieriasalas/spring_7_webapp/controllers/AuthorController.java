@@ -1,6 +1,7 @@
 package com.ingenieriasalas.spring_7_webapp.controllers;
 
 import com.ingenieriasalas.spring_7_webapp.services.AuthorService;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Project Name: spring-7-webapp
  * Description: beExcellent
  */
-@RestController
+@Controller
 public class AuthorController {
 
     private final AuthorService authorService;
@@ -21,10 +22,10 @@ public class AuthorController {
     }
 
     @GetMapping("/authors")
-    public Model getAuthors(Model model) {
+    public String getAuthors(Model model) {
 
         model.addAttribute("authors", authorService.findAll());
 
-        return model;
+        return "authors";
     }
 }
